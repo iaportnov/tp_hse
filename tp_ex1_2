@@ -1,0 +1,29 @@
+#!/bin/bash
+
+dir_out=${1}
+dir_in=${2}
+
+echo '-----------'
+echo 'Файлы'
+find $dir_out -maxdepth 1 -type f
+echo '-----------'
+echo 'Директории'
+find $dir_out -mindepth 1 -type d
+echo '-----------'
+echo 'Все файлы'
+find $dir_out -type f
+echo '-----------'
+
+find $dir_out -type f -name '*.*' | while read file
+do	
+	filename=$(basename -- "$file")
+	path=$(dirname "$file")
+	saved=$filename
+	counter=1
+	while [[ -e $dir_in/$filename ]]
+		do
+			filename="${saved%.*}(${counter})${saved##*.}"
+			counter=$((++counter))
+		done
+	cp "$path/$saved" "$dir_in/$filename"
+done
