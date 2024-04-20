@@ -14,15 +14,16 @@ echo 'Все файлы'
 find $dir_out -type f
 echo '-----------'
 
-for file in `find $dir_out -type f`
+find $dir_out -type f -name '*.*' | while read file
 do	
 	filename=$(basename -- "$file")
+	path=$(dirname "$file")
 	saved=$filename
 	counter=1
-	while [ -e $dir_in/$filename ]
+	while [[ -e $dir_in/$filename ]]
 		do
-			filename="${saved%.*}(${counter})"
+			filename="${saved%.*}(${counter})${saved##*.}"
 			counter=$((++counter))
 		done
-	cp $file $dir_in/$filename
+	cp "$path/$saved" "$dir_in/$filename"
 done
